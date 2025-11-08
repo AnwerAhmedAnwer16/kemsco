@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_checklist_line_user,checklist.line.user,model_checklist_line,project.group_project_user,1,1,1,1
+access_maintenance_activity_line_user,maintenance.activity.line.user,model_maintenance_activity_line,project.group_project_user,1,1,1,1

@@ -1,0 +1,44 @@
+<!-- views/project_task_views.xml -->
+<odoo>
+    <record id="view_task_form_reports_inherited" model="ir.ui.view">
+        <field name="name">project.task.form.reports.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='user_ids']" position="after">
+                <field name="report_type" widget="selection"/>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                
+                <!-- Page 1: Maintenance (UPDATED) -->
+                <page string="Maintenance" name="maintenance_page" invisible="report_type != 'maintenance'">
+                    <field name="maintenance_activity_ids">
+                        <tree create="false" delete="false" editable="bottom">
+                            <!-- Minimized activity field -->
+                            <field name="display_activity" width="30%"/>
+                            <!-- Hidden required field -->
+                            <!-- <field name="activity_description" invisible="1"/> -->
+                            <!-- Maximized remarks field -->
+                            <field name="remarks" width="70%"/>
+                        </tree>
+                    </field>
+                </page>
+
+                <!-- Page 2: Technical Report (unchanged) -->
+                <page string="Technical Report" name="technical_report_page" invisible="report_type != 'technical_report'">
+                    <field name="technical_checklist_ids">
+                        <tree create="false" delete="false" editable="bottom">
+                            <field name="display_description"/>
+                            <!-- <field name="description" invisible="1"/> -->
+                            <field name="status"/>
+                            <field name="remarks"/>
+                        </tree>
+                    </field>
+                </page>
+
+            </xpath>
+        </field>
+    </record>
+</odoo>
