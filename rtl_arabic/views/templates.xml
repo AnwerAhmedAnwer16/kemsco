@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <template id="RTL_Arabic_Direction" inherit_id="web.layout" name="RTL Direction">
+        <xpath expr="//html/head/t" position="after">
+            <t t-if="lang_direction == 'rtl'" t-call-assets="rtl_arabic.assets_rtl" />
+        </xpath>
+    </template>
+</odoo>
