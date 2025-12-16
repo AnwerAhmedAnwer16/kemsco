@@ -15,13 +15,13 @@
                 <!-- Page 1: Maintenance (UPDATED) -->
                 <page string="Maintenance" name="maintenance_page" invisible="report_type != 'maintenance'">
                     <field name="maintenance_activity_ids">
-                        <tree create="false" delete="false" editable="bottom">
-                            <!-- Minimized activity field -->
-                            <field name="display_activity" width="30%"/>
+                        <tree create="false" delete="false" editable="bottom" class="maintenance-activity-tree">
+                            <!-- Minimized activity field - fits text only -->
+                            <field name="display_activity"/>
                             <!-- Hidden required field -->
                             <!-- <field name="activity_description" invisible="1"/> -->
                             <!-- Maximized remarks field -->
-                            <field name="remarks" width="70%"/>
+                            <field name="remarks"/>
                         </tree>
                     </field>
                 </page>

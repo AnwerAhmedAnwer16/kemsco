@@ -1,0 +1,26 @@
+/* Custom styles for maintenance activity tree view */
+.maintenance-activity-tree table thead th[data-name="display_activity"],
+.maintenance-activity-tree table tbody td[data-name="display_activity"] {
+    width: 30% !important;
+    min-width: 250px !important;
+    max-width: 500px !important;
+}
+
+.maintenance-activity-tree table thead th[data-name="remarks"],
+.maintenance-activity-tree table tbody td[data-name="remarks"] {
+    width: 70% !important;
+}
+
+/* Fallback using nth-child if data-name attributes don't work */
+.maintenance-activity-tree .o_list_table thead th:nth-child(1),
+.maintenance-activity-tree .o_list_table tbody td:nth-child(1) {
+    width: 30% !important;
+    min-width: 250px !important;
+    max-width: 500px !important;
+}
+
+.maintenance-activity-tree .o_list_table thead th:nth-child(2),
+.maintenance-activity-tree .o_list_table tbody td:nth-child(2) {
+    width: 75% !important;
+}
+

@@ -11,6 +11,11 @@
         'security/ir.model.access.csv',
         'views/project_task_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'project_task_reports/static/src/css/project_task_reports.css',
+        ],
+    },
     'installable': True,
     'application': False,
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit project task for adding new fields -->
+    <record id="view_task_form2" model="ir.ui.view">
+        <field name="name">project.task.view.form.inherit.digital.signature</field>
+        <field name="model">project.task</field>
+        <field name="priority" eval="20"/>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <field name="is_show_signature" invisible="1"/>
+                <page string="Digital Signature"
+                      invisible="is_show_signature == False">
+                    <group>
+                        <field name="is_enable_others" invisible="1"/>
+                        <field name="digital_sign"/>
+                        <field name="sign_by"
+                               invisible="is_enable_others == False"/>
+                        <field name="designation"
+                               invisible="is_enable_others == False"/>
+                        <field name="sign_on"
+                               invisible="is_enable_others == False"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
