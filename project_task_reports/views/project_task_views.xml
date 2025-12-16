@@ -17,9 +17,9 @@
                     <field name="maintenance_activity_ids">
                         <tree create="false" delete="false" editable="bottom" class="maintenance-activity-tree">
                             <!-- Minimized activity field - fits text only -->
-                            <field name="display_activity"/>
-                            <!-- Hidden required field -->
-                            <!-- <field name="activity_description" invisible="1"/> -->
+                            <field name="display_activity" readonly="1"/>
+                            <!-- Hidden required field - must be present for saving -->
+                            <field name="activity_description" column_invisible="1"/>
                             <!-- Maximized remarks field -->
                             <field name="remarks"/>
                         </tree>
@@ -29,9 +29,9 @@
                 <!-- Page 2: Technical Report (unchanged) -->
                 <page string="Technical Report" name="technical_report_page" invisible="report_type != 'technical_report'">
                     <field name="technical_checklist_ids">
-                        <tree create="false" delete="false" editable="bottom">
-                            <field name="display_description"/>
-                            <!-- <field name="description" invisible="1"/> -->
+                        <tree create="false" delete="false" editable="bottom" class="technical-report-tree">
+                            <field name="display_description" readonly="1"/>
+                            <field name="description" column_invisible="1"/>
                             <field name="status"/>
                             <field name="remarks"/>
                         </tree>
