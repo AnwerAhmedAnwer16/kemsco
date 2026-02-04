@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+
+        <record id="view_access_management_form" model="ir.ui.view">
+            <field name="name">view.access.management.form</field>
+            <field name="model">access.management</field>
+            <field name="arch" type="xml">
+                <form string="Access Management From">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" default_focus="1" required='1'/>
+                                <field name="company_ids" options="{'no_create': True}" widget="many2many_tags"
+                                       groups="base.group_multi_company"/>
+                                <field name="disabled_model_ids" widget="many2many_tags" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="user_ids"
+                                       widget='many2many_tags'
+                                       options="{'no_create': True}"
+                                       domain="[('share','=',False)]"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <!-- General -->
+                            <page string="General">
+                                <group class="p-4">
+                                    <group>
+                                        <field name="is_active" widget="boolean_toggle"/>
+                                        <field name="readonly"/>
+                                        <field name="disable_login"/>
+                                        <field name="disable_debug_mode" groups="base.group_system"/>
+                                        <field name="hide_db_name"/>
+                                        <field name="hide_export"/>
+                                        <field name="hide_import"/>
+                                        <field name="hide_add_properties"/>
+                                    </group>
+                                    <group>
+                                        <field name="hide_chatter"/>
+                                        <field name="hide_send_mail"/>
+                                        <field name="hide_log_notes"/>
+                                        <field name="hide_schedule_activity"/>
+                                    </group>
+                                </group>
+                                <group class="p-4">
+                                    <field name="hide_menu_ids" widget="many2many_tags"
+                                           groups="base.group_system,simplify_access_management.group_hide_menus"
+                                           options="{'no_create': True, 'no_edit': True}"/>
+                                </group>
+                                <p role="alert"
+                                   class="fa fa-info-circle p-4 alert alert-info text-center alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden"
+                                   style="font-size: 15px;letter-spacing: 1px;"
+                                   groups="base.group_system,simplify_access_management.group_hide_menus">
+                                    The menu or submenu added on above list will be hidden from the defined user(s).
+                                </p>
+                            </page>
+                            <!-- Action Access -->
+                            <page string="Action Access">
+                                <field name='access_action_ids' class="p-4">
+                                    <tree editable='bottom'>
+                                        <field name="model_id" context="{'is_access_rights': True}"
+                                               options="{'no_open': True, 'no_create': True, 'no_create_edit': True}"
+                                               required='1'
+                                               domain="[('id','not in',parent.disabled_model_ids)]"/>
+                                        <field name="report_action_ids" widget="many2many_tags"
+                                               options="{'no_create': True}"/>
+                                        <field name="server_action_ids" widget="many2many_tags"
+                                               options="{'no_create': True}"/>
+                                        <field name="ir_ui_view_type_ids" widget="many2many_tags"
+                                               options="{'no_create': True}"/>
+                                        <field name="hide_create"/>
+                                        <field name="hide_edit"/>
+                                        <field name="hide_delete"/>
+                                        <field name="hide_archive_unarchive"/>
+                                        <field name="hide_duplicate"/>
+                                        <field name="readonly"/>
+                                        <field name="hide_import"/>
+                                        <field name="hide_export"/>
+                                        <field name="hide_add_properties"/>
+                                        <field name="hide_external_link"/>
+                                        <field name="hide_link_create"/>
+                                        <field name="hide_link_edit"/>
+                                    </tree>
+                                </field>
+                                <p role="alert"
+                                   class="fa fa-info-circle p-4 alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden"
+                                   style="font-size: 15px;letter-spacing: 1px;">
+                                    You can Hide reports, Hide action buttons like Create, Edit, Export, Hide
+                                    Views
+                                    (list, kanban, report, etc), Also hide some actions like Archive, Delete,
+                                    Duplicate,
+                                    etc from defined user(s).
+                                    <br/>
+                                    <br/>Note: the restriction added here will only become hidden for defined
+                                    users.
+                                    They can still be accessed by python code or API, so it won't intruppet the
+                                    process
+                                    in some cases like from POS and API. If you strictly want to block the
+                                    Create, Edit,
+                                    Delete process entirely from the user, you can use the 'Domain Access' Tab
+                                    of the
+                                    form and define the rule there.
+                                </p>
+                            </page>
+                            <!-- Domain Access -->
+                            <page string="Domain Access">
+                                <field name='access_domain_ids' class="p-4">
+                                    <tree editable="bottom">
+                                        <field name="model_id"
+                                               context="{'is_access_rights': True}"
+                                               options="{'no_open': True, 'no_create': True, 'no_create_edit': True}"
+                                               domain="[('id','not in',parent.disabled_model_ids)]"/>
+                                        <field name="restrict_create"/>
+                                        <field name="restrict_edit"/>
+                                        <field name="restrict_delete"/>
+                                        <field name="model_name" column_invisible="1"/>
+                                        <field name="domain"
+                                               widget="domain"
+                                               options="{'model': 'model_name', 'in_dialog': true}"/>
+                                    </tree>
+                                </field>
+                                <p role="alert"
+                                   class="fa fa-info-circle p-4 alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden"
+                                   style="font-size: 15px;letter-spacing: 1px;">
+                                    You can set strict access rights of the model(create, write, delete)
+                                    and set
+                                    the domain to access the model's records for any user and from one place.
+                                    The access
+                                    defined here will either allow or block the entire access from the specified
+                                    user(s), not only from the system, but also from the code and API. So be
+                                    careful
+                                    while defining the accesses here. If you just want to hide Create, Edit and
+                                    Delete buttons from the backend user for models but want to allow them
+                                    to use
+                                    POS, then defining access here will generate the error on POS side. To
+                                    prevent
+                                    that, you can use the 'Model Access' tab to Hide Create, Edit and Delete
+                                    buttons.
+                                    <br/>
+                                    <br/>You can not allow the Create (View), Write (Create), Delete
+                                    rights by
+                                    just checking the check-boxes of respective actions. And also this tab gives you
+                                    advance
+                                    configurator to allow those rights for your user on specific conditions
+                                </p>
+                            </page>
+                            <!-- Field Access -->
+                            <page string="Field Access">
+                                <field name='access_field_ids' class="p-4">
+                                    <tree editable='bottom'>
+                                        <field name="model_id" context="{'is_access_rights': True}"
+                                               options="{'no_open': True, 'no_create': True, 'no_create_edit': True}"
+                                               required='1'
+                                               domain="[('id','not in',parent.disabled_model_ids)]"/>
+                                        <field name="field_ids" context="{'is_access_rights': True}"
+                                               options="{'no_open': True, 'no_create': True, 'no_create_edit': True}"
+                                               widget='many2many_tags' domain="[('model_id','=',model_id)]"/>
+                                        <field name="invisible"/>
+                                        <field name="readonly"/>
+                                        <field name="required"/>
+                                        <field name="hide_create"/>
+                                        <field name="hide_edit"/>
+                                        <field name="external_link"/>
+                                    </tree>
+                                </field>
+                                <p role="alert"
+                                   class="fa fa-info-circle p-4 alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden"
+                                   style="font-size: 15px;letter-spacing: 1px;">
+                                    You can Hide any field of any model, Turn any field to Read-Only or
+                                    Set any field as Required for the specified user(s) from here.
+                                    or hide any x2x fields create, edit links and external link.
+                                </p>
+                            </page>
+                            <!-- View Node Access -->
+                            <page string="View Node Access">
+                                <field name='access_view_node_ids' class="p-4">
+                                    <tree editable="bottom">
+                                        <field name="model_id" context="{'is_access_rights': True}"
+                                               options="{'no_open': True, 'no_create': True, 'no_create_edit': True}"
+                                               domain="[('id','not in',parent.disabled_model_ids)]"/>
+                                        <field name="ir_ui_view_btn_node_ids" widget="many2many_tags"
+                                               options="{'no_create': True}"/>
+                                        <field name="ir_ui_view_page_node_ids" widget="many2many_tags"
+                                               options="{'no_create': True}"/>
+                                        <field name="ir_ui_view_link_node_ids" widget="many2many_tags"
+                                               options="{'no_create': True}"/>
+                                        <field name="ir_ui_view_filter_node_ids" widget="many2many_tags"
+                                               options="{'no_create': True}"/>
+                                        <field name="ir_ui_view_group_by_node_ids" widget="many2many_tags"
+                                               options="{'no_create': True}"/>
+                                    </tree>
+                                </field>
+                                <p role="alert"
+                                   class="fa fa-info-circle p-4 alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden"
+                                   style="font-size: 15px;letter-spacing: 1px;">
+                                    You can hide access of action buttons, object buttons, tabs, links (in
+                                    kanban
+                                    box) , Filters and Group By of any model for specified user from this tab.
+                                    <br/>
+                                    <br/>Here Button means any action button visible on any view.
+                                    <br/>
+                                    <br/>Page means any tab visible on any form view.
+                                    <br/>
+                                    <br/>And Link means any action link visible on Kanban view.
+                                    <br/>
+                                    <br/>Here Filters means any Filters visible on List/Tree view.
+                                    <br/>
+                                    <br/>Group By means any Group By visible on List/Tree view.
+                                </p>
+                            </page>
+                            <!-- Chatter Access -->
+                            <page string="Chatter Access">
+                                <field name="access_chatter_ids" class="p-4">
+                                    <tree editable="bottom">
+                                        <field name="model_id" context="{'is_access_rights': True}"
+                                               options="{'no_open': True, 'no_create': True, 'no_create_edit': True}"
+                                               domain="[('id','not in',parent.disabled_model_ids)]"
+                                               required="1"/>
+                                        <field name="hide_chatter"/>
+                                        <field name="hide_send_mail"/>
+                                        <field name="hide_log_notes"/>
+                                        <field name="hide_schedule_activity"/>
+                                    </tree>
+                                </field>
+                                <p role="alert"
+                                   class="fa fa-info-circle p-4 alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden"
+                                   style="font-size: 15px;letter-spacing: 1px;">
+                                    You can hide Chatter and Buttons of Chatter for any model for specified user
+                                    from
+                                    this tab.
+                                    <br/>
+                                    <br/>Here Button of Chatter means 'Send message', 'Log note', 'Activities'.
+                                </p>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="view_access_management_tree" model="ir.ui.view">
+            <field name="name">view.access.management.tree</field>
+            <field name="model">access.management</field>
+            <field name="arch" type="xml">
+                <tree string="Access Management Tree">
+                    <field name="name"/>
+                    <field name="user_ids" widget='many2many_tags'/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_access_management_view" model="ir.actions.act_window">
+            <field name="name">Access Management</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">access.management</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+        </record>
+
+        <menuitem id="main_menu_simplify_access_management"
+                  name="Access Management"
+                  action="simplify_access_management.action_access_management_view"
+                  groups="simplify_access_management.group_access_management"
+                  web_icon="simplify_access_management,static/description/icon.png"
+        />
+
+
+    </data>
+</odoo>

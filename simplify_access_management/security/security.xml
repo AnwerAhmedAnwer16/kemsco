@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="group_access_management" model="res.groups">
+            <field name="name">Access Management</field>
+            <field name="comment">Access Management Tool Tip</field>
+        </record>
+
+        <record id="group_hide_menus" model="res.groups">
+            <field name="name">Hide Menus</field>
+            <field name="comment">Hide Menus Tool Tip</field>
+        </record>
+
+    </data>
+</odoo>

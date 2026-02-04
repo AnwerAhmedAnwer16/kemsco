@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_access_management,access.management,model_access_management,,1,1,1,1
+access_access_action,access.action,model_access_action,,1,1,1,1
+access_access_field,access.field,model_access_field,,1,1,1,1
+access_ir_access_actions,ir.access.actions.type,model_ir_access_actions,,1,1,1,1
+access_ir_ui_view_type,ir.ui.view.type,model_ir_ui_view_type,,1,1,1,1
+access_ir_ui_view_node,ir.ui.view.node,model_ir_ui_view_node,,1,1,1,1
+access_access_domain,access.access.domain,model_access_domain,,1,1,1,1
+access_access_view_node,access.view.node,model_access_view_node,,1,1,1,1
+access_access_chatter,access.chatter,model_access_chatter,,1,1,1,1
+"base.access_ir_model_fields_user","ir_model_fields all","base.model_ir_model_fields",base.group_user,1,1,0,0
+"base.access_ir_sequence_group_user","ir_sequence group_user","base.model_ir_sequence","base.group_user",1,1,1,0
+"base.access_ir_model_user","ir_model_all","base.model_ir_model",base.group_user,1,0,0,0
+

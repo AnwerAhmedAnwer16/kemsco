@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="UserMenu" t-inherit="web.UserMenu" t-inherit-mode="extension" >
+         <xpath expr="//small[hasclass('oe_topbar_name')]" position="replace">
+             <t t-if="!hide_db_name">
+                 <small class="oe_topbar_name d-lg-inline-block ms-2 text-start smaller lh-1 text-truncate"
+                        style="max-width: 200px">
+                    <t t-esc="user.name"/>
+                    (<i class="fa fa-database oi-small me-1"/>
+                    <t t-esc="user.db.name"/>)
+                </small>
+             </t>
+        </xpath>
+    </t>
+
+</templates>
