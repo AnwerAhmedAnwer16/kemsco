@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Resala generate the preference view form for clear.data.model -->
+        <record id="view_clear_data_form" model="ir.ui.view">
+            <field name="name">Clear model group form</field>
+            <field name="model">clear.data.model</field>
+            <field name="arch" type="xml">
+                <form string="clear model group form">
+                    <header>
+                        <button name="action_do_clear" string="do clear" type="object" class="btn-primary"></button>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="auto_clear_ir_sequence">True</field>
+                            <field name="internal_model_list"></field>
+                            <field name="model_clear_ids" widget="many2many_tags"></field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Resala generate the preference view tree for clear.data.model -->
+        <record model="ir.ui.view" id="view_clear_data_tree">
+            <field name="name">Clear model group list</field>
+            <field name="model">clear.data.model</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="model_clear_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Resala generate this action window for clear.data.model -->
+        <record id="action_clear_data_view" model="ir.actions.act_window">
+            <field name="name">Clear Data</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">clear.data.model</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Clear Data" id="clear_data_menu_root"/>
+        <menuitem name="Model Group List" id="clear_data_model_list"
+                  parent="clear_data_menu_root" action="action_clear_data_view"/>
+
+    </data>
+</odoo>

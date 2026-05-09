@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- inside this file we pre-define two records for clear.data.model model-->
+
+        <record id="clear_data_model_group_base" model='clear.data.model'>
+            <field name="name">Base data</field>
+            <field name="internal_model_list">['product.template','product.category']</field>
+            <field name="auto_clear_ir_sequence">True</field>
+        </record>
+
+        <record id="clear_data_model_group_business" model='clear.data.model'>
+            <field name="name">Business data</field>
+            <field name="internal_model_list">[
+                'purchase.order.line',
+                'purchase.order',
+                'sale.order.line',
+                'sale.order',
+                'pos.payment',
+                'pos.order.line',
+                'pos.order',
+                'mrp.production',
+                'stock.move',
+                'stock.picking',
+                'stock.quant',
+                'stock.quant.package',
+                'stock.lot',
+                'account.bank.statement',
+                'account.bank.statement.line',
+                'account.payment',
+                'account.analytic.line',
+                'account.partial.reconcile',
+                'account.move.line',
+                'account.move',
+                'mail.message'
+                ]
+            </field>
+            <field name="auto_clear_ir_sequence">True</field>
+        </record>
+
+    </data>
+</odoo>
