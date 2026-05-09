@@ -10,28 +10,36 @@ class ChecklistLine(models.Model):
     task_id = fields.Many2one('project.task', string="Task", required=True, ondelete='cascade')
     sequence = fields.Integer(string='Sequence', default=10)
     
+    display_type = fields.Selection([
+        ('line_section', 'Section'),
+        ('line_note', 'Note'),
+    ], default=False)
+    
+    name = fields.Char(string='Description')
+
     description = fields.Selection([
-        ('fire_fighting_sys', 'Fire Fighting System'),
-        ('sprinklers_sys', 'Sprinklers System'),
-        ('fire_pump', 'Fire Pump'),
-        ('fire_alarm_sys', 'Fire Alarm System'),
-        ('smoke_detectors', 'Smoke Detectors'),
-        ('heat_detectors', 'Heat Detectors'),
-        ('fire_extinguishers', 'Fire Extinguishers'),
-        ('hose_reel_cabinet', 'Fire Hose Reel Cabinet'),
-        ('emergency_lights', 'Emergency Lights'),
-        ('fire_mantel_cabinet', 'Fire Mantel / Cabinet'),
-    ], string="Description", required=True)
+        # FIRE FIGHTING SYS.
+        ('hose_reels', 'HOSE REELS SYS.'),
+        ('sprinklers', 'SPRINKLERS SYS.'),
+        ('dry_wet_riser', '(DRY & WET) RISER'),
+        ('main_pumps', 'MAIN PUMPS'),
+        ('jockey_pump', 'JOCKEY PUMP'),
+        ('extinguishers', 'FIRE EXTINGUISHERS'),
+        # FIRE ALARM SYS.
+        ('alarm_panel', 'FIRE ALARM CONTROL PANEL'),
+        ('call_points', 'CALL POINTS'),
+        ('smoke_detectors', 'SMOKE DETECTORS'),
+        ('heat_detectors', 'HEAT DETECTORS'),
+        ('alarm_bells', 'ALARM BELLS'),
+        # VENTILLATION SYS.
+        ('smoke_van', 'SMOKE VAN'),
+        ('fresh_air_van', 'FRESH AIR VAN'),
+        # EMERG. LIGHTS SYS.
+        ('exit_light', 'EXIT LIGHT'),
+        ('emergency_light', 'EMERGENCY LIGHT'),
+    ], string="Item")
 
-    # NEW: Computed field to show the user-friendly name
-    display_description = fields.Char(compute='_compute_display_description', string='Item')
 
-    @api.depends('description')
-    def _compute_display_description(self):
-        for record in self:
-            # Create a mapping from the selection options to get the nice name
-            selection_map = dict(self._fields['description'].selection)
-            record.display_description = selection_map.get(record.description, '')
     
     status = fields.Selection([
         ('ok', 'OK'),

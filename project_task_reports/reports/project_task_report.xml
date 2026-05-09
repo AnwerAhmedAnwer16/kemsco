@@ -1,0 +1,168 @@
+<!-- reports/project_task_report.xml -->
+<odoo>
+    
+    <!-- 1. The Print Action -->
+    <record id="action_project_task_report" model="ir.actions.report">
+        <field name="name">Print Task Report</field>
+        <field name="model">project.task</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">project_task_reports.project_task_report_template</field>
+        <field name="report_file">project_task_reports.project_task_report_template</field>
+        <field name="binding_model_id" ref="project.model_project_task"/>
+        <field name="binding_view_types">form</field>
+        <field name="paperformat_id" ref="project_task_reports.paperformat_task_report"/>
+        
+    </record>
+
+    <!-- 2. The QWeb Template -->
+    <template id="project_task_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="company" t-value="o.company_id or res_company"/>
+                <t t-call="web.basic_layout">
+                    <div class="page">
+                        
+                        <!-- SIMULATED STANDARD ODOO HEADER TO BYPASS WKHTMLTOPDF BUG -->
+                        <div class="row">
+                            <div class="col-6">
+                                <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 80px;" alt="Logo"/>
+                            </div>
+                            <div class="col-6 text-end" style="font-size: 13px;">
+                                <strong><span t-field="company.name"/></strong><br/>
+                                <span t-if="company.street"><span t-field="company.street"/><br/></span>
+                                <span t-if="company.city"><span t-field="company.city"/>, </span>
+                                <span t-if="company.state_id"><span t-field="company.state_id.name"/> </span>
+                                <span t-if="company.zip"><span t-field="company.zip"/></span>
+                                <t t-if="company.city or company.state_id or company.zip"><br/></t>
+                                <span t-if="company.country_id"><span t-field="company.country_id.name"/><br/></span>
+                                <span t-if="company.phone">Tel: <span t-field="company.phone"/><br/></span>
+                                <span t-if="company.email">Email: <span t-field="company.email"/></span>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <div style="border-bottom: 2px solid black;"/>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mb-2">
+                            <h2>Task Report</h2>
+                        </div>
+
+                        <!-- MAIN DATA SECTION -->
+                        <table class="table table-bordered mb-4" style="table-layout: fixed;">
+                            <tr>
+                                <th class="text-start" style="width: 25%; background-color: #f0f0f0;">Task Name</th>
+                                <td class="text-start" style="width: 25%;"><span t-field="o.name"/></td>
+                                
+                                <th class="text-start" style="width: 25%; background-color: #f0f0f0;">Project</th>
+                                <td class="text-start" style="width: 25%;"><span t-esc="o.project_id.name or '-'"/></td>
+                            </tr>
+                            <tr>
+                                <th class="text-start" style="background-color: #f0f0f0;">Customer</th>
+                                <td class="text-start"><span t-esc="o.partner_id.name or '-'"/></td>
+                                
+                                <th class="text-start" style="background-color: #f0f0f0;">Assigned To</th>
+                                <td class="text-start"><span t-esc="', '.join(o.user_ids.mapped('name')) or '-'"/></td>
+                            </tr>
+                            <tr>
+                                <th class="text-start" style="background-color: #f0f0f0;">Report Type</th>
+                                <td colspan="3" class="text-start">
+                                    <span t-esc="dict(o.fields_get(allfields=['report_type'])['report_type']['selection']).get(o.report_type, '-')"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- DYNAMIC REPORT SECTION -->
+                        
+                        <!-- Technical Report -->
+                        <t t-if="o.report_type == 'technical_report'">
+                            <h4 class="mt-4">Technical Report Checklist</h4>
+                            <table class="table table-bordered table-sm">
+                                <thead style="background-color: #e9ecef;">
+                                    <tr>
+                                        <th class="text-center" style="width: 8%;">S.N</th>
+                                        <th style="width: 42%;">DESCRIPTION</th>
+                                        <th class="text-center" style="width: 15%;">STATUS</th>
+                                        <th style="width: 35%;">REMARKS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-if="not o.technical_checklist_ids">
+                                        <tr><td colspan="4" class="text-center text-muted">No checklist items generated.</td></tr>
+                                    </t>
+                                    <t t-set="sn_counter" t-value="0"/>
+                                    <t t-foreach="o.technical_checklist_ids" t-as="line">
+                                        <!-- Section Header Row -->
+                                        <t t-if="line.display_type == 'line_section'">
+                                            <t t-set="sn_counter" t-value="0"/>
+                                            <tr style="background-color: #f2f2f2; font-weight: bold;">
+                                                <td colspan="4" class="ps-2">
+                                                    <span t-field="line.name"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        
+                                        <!-- Standard Item Row -->
+                                        <t t-if="not line.display_type">
+                                            <t t-set="sn_counter" t-value="sn_counter + 1"/>
+                                            <tr>
+                                                <td class="text-center"><span t-esc="sn_counter"/></td>
+                                                <td><span t-field="line.description"/></td>
+                                                <td class="text-center"><span t-esc="line.status or '-'"/></td>
+                                                <td><span t-esc="line.remarks or '-'"/></td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <!-- Maintenance Report -->
+                        <t t-elif="o.report_type == 'maintenance'">
+                            <h4 class="mt-4">Maintenance Activities</h4>
+                            <table class="table table-bordered table-sm">
+                                <thead style="background-color: #e9ecef;">
+                                    <tr>
+                                        <th class="text-center" style="width: 5%;">#</th>
+                                        <th style="width: 45%;">Activity</th>
+                                        <th style="width: 50%;">Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-if="not o.maintenance_activity_ids">
+                                        <tr><td colspan="3" class="text-center text-muted">No maintenance activities generated.</td></tr>
+                                    </t>
+                                    <t t-foreach="o.maintenance_activity_ids" t-as="line">
+                                        <tr>
+                                            <td class="text-center"><span t-esc="line_index + 1"/></td>
+                                            <td><span t-field="line.activity_description"/></td>
+                                            <td><span t-esc="line.remarks or '-'"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <!-- No Report Type -->
+                        <t t-else="">
+                            <div class="alert alert-info text-center mt-4" role="alert">
+                                <strong>Note:</strong> No specific report type (Maintenance or Technical) was selected for this task.
+                            </div>
+                        </t>
+
+                        <!-- Customer Signature Section -->
+                        <div class="row mt-5" t-if="o.customer_signature" style="page-break-inside: avoid;">
+                            <div class="col-6 offset-6 text-center">
+                                <strong style="border-top: 1px solid black; padding-top: 5px; display: inline-block; min-width: 200px;">Customer Signature</strong><br/>
+                                <img t-att-src="image_data_uri(o.customer_signature)" style="max-height: 120px; max-width: 250px; margin-top: 10px;" alt="Signature"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

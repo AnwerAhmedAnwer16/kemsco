@@ -1,0 +1,15 @@
+<odoo>
+
+    <record id="paperformat_task_report" model="report.paperformat">
+        <field name="name">Task Report Format</field>
+
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+    </record>
+
+</odoo>

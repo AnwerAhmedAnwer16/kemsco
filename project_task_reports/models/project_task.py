@@ -16,6 +16,7 @@ class ProjectTask(models.Model):
 
     technical_checklist_ids = fields.One2many('checklist.line', 'task_id', string="Technical Checklist")
     maintenance_activity_ids = fields.One2many('maintenance.activity.line', 'task_id', string="Maintenance Activities")
+    customer_signature = fields.Binary(string="Customer Signature", attachment=True, help="Customer signature for report approval.")
 
     @api.onchange('report_type')
     def _onchange_report_type(self):
@@ -25,24 +26,45 @@ class ProjectTask(models.Model):
         self.maintenance_activity_ids = [(5, 0, 0)]
 
         if self.report_type == 'technical_report':
-            # Define the static list of technical items
-            items = [
-                ('fire_fighting_sys', 'Fire Fighting System'),
-                ('sprinklers_sys', 'Sprinklers System'),
-                ('fire_pump', 'Fire Pump'),
-                ('fire_alarm_sys', 'Fire Alarm System'),
-                ('smoke_detectors', 'Smoke Detectors'),
-                ('heat_detectors', 'Heat Detectors'),
-                ('fire_extinguishers', 'Fire Extinguishers'),
-                ('hose_reel_cabinet', 'Fire Hose Reel Cabinet'),
-                ('emergency_lights', 'Emergency Lights'),
-                ('fire_mantel_cabinet', 'Fire Mantel / Cabinet'),
+            # Define the static list of sections and their items
+            sections = [
+                ('FIRE FIGHTING SYS.', [
+                    ('hose_reels', 'HOSE REELS SYS.'),
+                    ('sprinklers', 'SPRINKLERS SYS.'),
+                    ('dry_wet_riser', '(DRY & WET) RISER'),
+                    ('main_pumps', 'MAIN PUMPS'),
+                    ('jockey_pump', 'JOCKEY PUMP'),
+                    ('extinguishers', 'FIRE EXTINGUISHERS'),
+                ]),
+                ('FIRE ALARM SYS.', [
+                    ('alarm_panel', 'FIRE ALARM CONTROL PANEL'),
+                    ('call_points', 'CALL POINTS'),
+                    ('smoke_detectors', 'SMOKE DETECTORS'),
+                    ('heat_detectors', 'HEAT DETECTORS'),
+                    ('alarm_bells', 'ALARM BELLS'),
+                ]),
+                ('VENTILLATION SYS.', [
+                    ('smoke_van', 'SMOKE VAN'),
+                    ('fresh_air_van', 'FRESH AIR VAN'),
+                ]),
+                ('EMERG. LIGHTS SYS.', [
+                    ('exit_light', 'EXIT LIGHT'),
+                    ('emergency_light', 'EMERGENCY LIGHT'),
+                ]),
             ]
             
-            # CORRECTED: Build a list of commands and assign it
             lines_to_create = []
-            for item_key, item_name in items:
-                lines_to_create.append((0, 0, {'description': item_key}))
+            for section_name, items in sections:
+                # 1. Add the section header line
+                lines_to_create.append((0, 0, {
+                    'display_type': 'line_section',
+                    'name': section_name,
+                }))
+                # 2. Add the items under this section
+                for item_key, item_name in items:
+                    lines_to_create.append((0, 0, {
+                        'description': item_key,
+                    }))
             self.technical_checklist_ids = lines_to_create
 
         elif self.report_type == 'maintenance':

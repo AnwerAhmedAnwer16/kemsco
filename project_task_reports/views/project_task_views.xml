@@ -12,30 +12,40 @@
 
             <xpath expr="//notebook" position="inside">
                 
-                <!-- Page 1: Maintenance (UPDATED) -->
+                <!-- Page 1: Maintenance -->
                 <page string="Maintenance" name="maintenance_page" invisible="report_type != 'maintenance'">
                     <field name="maintenance_activity_ids">
-                        <tree create="false" delete="false" editable="bottom" class="maintenance-activity-tree">
-                            <!-- Minimized activity field - fits text only -->
-                            <field name="display_activity" readonly="1"/>
-                            <!-- Hidden required field - must be present for saving -->
-                            <field name="activity_description" column_invisible="1"/>
-                            <!-- Maximized remarks field -->
-                            <field name="remarks"/>
+                        <tree create="false" delete="false" editable="bottom">
+                            <field name="activity_description" readonly="1" force_save="1"/>
+                            <!-- This field will now take up all remaining space -->
+                            <field name="remarks" widget="text"/>
                         </tree>
                     </field>
                 </page>
 
-                <!-- Page 2: Technical Report (unchanged) -->
+                <!-- Page 2: Technical Report -->
                 <page string="Technical Report" name="technical_report_page" invisible="report_type != 'technical_report'">
-                    <field name="technical_checklist_ids">
-                        <tree create="false" delete="false" editable="bottom" class="technical-report-tree">
-                            <field name="display_description" readonly="1"/>
-                            <field name="description" column_invisible="1"/>
-                            <field name="status"/>
-                            <field name="remarks"/>
+                    <field name="technical_checklist_ids" widget="section_and_note_one2many">
+                        <tree create="false" delete="false" editable="bottom">
+                            <control>
+                                <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                            </control>
+                            <field name="display_type" column_invisible="True"/>
+                            <field name="name" widget="section_and_note_text" invisible="display_type != 'line_section'" readonly="1" force_save="1"/>
+                            <field name="description" readonly="1" force_save="1" invisible="display_type == 'line_section'"/>
+                            <!-- This field is a small dropdown -->
+                            <field name="status" invisible="display_type == 'line_section'"/>
+                            <!-- This field will now take up all remaining space -->
+                            <field name="remarks" widget="text" invisible="display_type == 'line_section'"/>
                         </tree>
                     </field>
+                </page>
+
+                <!-- Page 3: Signature -->
+                <page string="Signature" name="signature_page" invisible="not report_type">
+                    <group>
+                        <field name="customer_signature" widget="signature"/>
+                    </group>
                 </page>
 
             </xpath>

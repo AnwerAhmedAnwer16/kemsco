@@ -29,15 +29,8 @@ class MaintenanceActivityLine(models.Model):
         ('voltage_frequency', 'Check voltage & frequency'),
         ('control_panel', 'Check control panel operation'),
         ('general_cleaning', 'General cleaning of generator'),
-    ], string="Activity", required=True)
+    ], string="Activity") #requi
 
-    # NEW: Computed field to show the user-friendly name
-    display_activity = fields.Char(compute='_compute_display_activity', string='Activity')
 
-    @api.depends('activity_description')
-    def _compute_display_activity(self):
-        for record in self:
-            selection_map = dict(self._fields['activity_description'].selection)
-            record.display_activity = selection_map.get(record.activity_description, '')
 
     remarks = fields.Text(string="Remarks")
