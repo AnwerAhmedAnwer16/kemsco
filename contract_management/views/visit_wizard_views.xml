@@ -1,0 +1,35 @@
+<odoo>
+    <data>
+
+        <record id="contract_visit_wizard_form" model="ir.ui.view">
+            <field name="name">contract.visit.wizard.form</field>
+            <field name="model">contract.visit.wizard</field>
+            <field name="arch" type="xml">
+                <form string="توليد الزيارات الميدانية">
+                    <group>
+                        <group>
+                            <field name="contract_id" invisible="1"/>
+                            <field name="visit_count"/>
+                            <field name="first_visit_date"/>
+                        </group>
+                        <group>
+                            <field name="recurrence_type"/>
+                            <field name="recurrence_interval"
+                                   invisible="recurrence_type == False"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_generate_visits"
+                                type="object"
+                                string="توليد"
+                                class="btn-primary"/>
+                        <button string="إلغاء"
+                                class="btn-secondary"
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

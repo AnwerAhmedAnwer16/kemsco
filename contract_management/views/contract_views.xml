@@ -1,0 +1,315 @@
+<odoo>
+    <data>
+
+        <record id="contract_management_form" model="ir.ui.view">
+            <field name="name">contract.management.form</field>
+            <field name="model">contract.management</field>
+            <field name="arch" type="xml">
+                <form string="العقد">
+                    <header>
+                        <!-- مسودة -->
+                        <button name="action_to_review"
+                                type="object"
+                                string="رفع للمراجعة"
+                                class="btn-info"
+                                invisible="stage_sequence != 1"/>
+                        <!-- قيد المراجعة -->
+                        <button name="action_approve"
+                                type="object"
+                                string="اعتماد"
+                                class="btn-primary"
+                                invisible="stage_sequence != 2"/>
+                        <!-- معتمد -->
+                        <button name="action_set_active"
+                                type="object"
+                                string="تنشيط"
+                                class="btn-success"
+                                invisible="stage_sequence != 3"/>
+                        <!-- نشط -->
+                        <button name="action_set_done"
+                                type="object"
+                                string="إنهاء"
+                                class="btn-warning"
+                                invisible="stage_sequence != 4"/>
+                        <button name="action_cancel"
+                                type="object"
+                                string="إلغاء"
+                                class="btn-danger"
+                                invisible="stage_is_cancelled or stage_is_done"/>
+                        <!-- منتهي / ملغي -->
+                        <button name="action_reactivate"
+                                type="object"
+                                string="إعادة تنشيط"
+                                class="btn-secondary"
+                                invisible="not stage_is_done and not stage_is_cancelled"/>
+                        <!-- عرض السعر -->
+                        <button name="action_create_sale_quotation"
+                                type="object"
+                                string="إنشاء عرض سعر"
+                                class="btn-info"
+                                invisible="sale_order_id"/>
+                        <!-- طباعة العقد (معلق مؤقتاً للتعديل المستقبلي) -->
+                        <button name="%(contract_management.action_report_contract)d"
+                                type="action"
+                                string="طباعة العقد"
+                                class="btn-secondary"
+                                icon="fa-print"/>
+                       
+                        <field name="stage_id"
+                               widget="statusbar"
+                               options="{'fold_field': 'fold'}"/>
+                        <field name="stage_sequence" invisible="1"/>
+                        <field name="stage_is_done" invisible="1"/>
+                        <field name="stage_is_cancelled" invisible="1"/>
+                    </header>
+
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_tasks"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    icon="fa-tasks">
+                                <field name="task_count"
+                                       string="المهام"
+                                       widget="statinfo"/>
+                            </button>
+                            <button name="action_open_invoices"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    icon="fa-money">
+                                <field name="invoice_count"
+                                       string="الفواتير"
+                                       widget="statinfo"/>
+                            </button>
+                            <button name="action_open_sale_order"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    icon="fa-shopping-cart"
+                                    invisible="not sale_order_id">
+                                <field name="sale_order_id" invisible="1"/>
+                                <span>عرض السعر</span>
+                            </button>
+                            <button name="action_open_project"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    icon="fa-sitemap"
+                                    invisible="not project_id">
+                                <field name="project_id" invisible="1"/>
+                                <span>المشروع</span>
+                            </button>
+                        </div>
+
+                        <widget name="web_ribbon" title="مكتمل" bg_color="bg-success" invisible="not stage_is_done"/>
+                        <widget name="web_ribbon" title="ملغي" bg_color="bg-danger" invisible="not stage_is_cancelled"/>
+
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="اسم العقد"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group string="تفاصيل العميل">
+                                <field name="partner_id"/>
+                                <field name="user_id"/>
+                            </group>
+                            <group string="القيمة والمواعيد">
+                                <field name="contract_value"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="معلومات التوقيع">
+                                <field name="signature" widget="signature"/>
+                            </group>
+                            <group string="شروط الدفع والزيارات">
+                                <field name="payment_terms"/>
+                                <field name="visits_frequency"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="الزيارات الميدانية والمشاريع" name="visits_projects">
+                                <group>
+                                    <group string="توليد الزيارات الميدانية" invisible="not project_id">
+                                        <button name="action_generate_visits_wizard"
+                                                type="object"
+                                                string="توليد الزيارات الميدانية"
+                                                class="btn-secondary"
+                                                icon="fa-calendar"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="ملاحظات" name="notes">
+                                <field name="note" placeholder="أضف ملاحظات..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="contract_management_tree" model="ir.ui.view">
+            <field name="name">contract.management.tree</field>
+            <field name="model">contract.management</field>
+            <field name="arch" type="xml">
+                <tree string="العقود"
+                      decoration-success="stage_id.is_done"
+                      decoration-danger="stage_id.is_cancelled"
+                      decoration-info="stage_id.sequence == 1">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="contract_value" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="stage_id" widget="badge"
+                           decoration-success="stage_id.is_done"
+                           decoration-danger="stage_id.is_cancelled"
+                           decoration-info="stage_id.sequence == 1"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="contract_management_search" model="ir.ui.view">
+            <field name="name">contract.management.search</field>
+            <field name="model">contract.management</field>
+            <field name="arch" type="xml">
+                <search string="بحث العقود">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <separator/>
+                    <filter name="filter_draft"
+                            string="مسودة"
+                            domain="[('stage_id.sequence', '=', 1)]"/>
+                    <filter name="filter_review"
+                            string="قيد المراجعة"
+                            domain="[('stage_id.sequence', '=', 2)]"/>
+                    <filter name="filter_approved"
+                            string="معتمد"
+                            domain="[('stage_id.sequence', '=', 3)]"/>
+                    <filter name="filter_active"
+                            string="نشط"
+                            domain="[('stage_id.sequence', '=', 4)]"/>
+                    <filter name="filter_done"
+                            string="منتهي"
+                            domain="[('stage_id.is_done', '=', True)]"/>
+                    <filter name="filter_cancelled"
+                            string="ملغي"
+                            domain="[('stage_id.is_cancelled', '=', True)]"/>
+                    <separator/>
+                    <filter name="filter_my"
+                            string="عقودي"
+                            domain="[('user_id', '=', uid)]"/>
+                    <group expand="0" string="تجميع">
+                        <filter name="group_partner"
+                                string="العميل"
+                                context="{'group_by': 'partner_id'}"/>
+                        <filter name="group_user"
+                                string="المسؤول"
+                                context="{'group_by': 'user_id'}"/>
+                        <filter name="group_stage"
+                                string="المرحلة"
+                                context="{'group_by': 'stage_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="contract_management_kanban" model="ir.ui.view">
+            <field name="name">contract.management.kanban</field>
+            <field name="model">contract.management</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="stage_id"
+                        group_create="false"
+                        group_edit="false">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="contract_value"/>
+                    <field name="currency_id"/>
+                    <field name="user_id"/>
+                    <field name="stage_id"/>
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_kanban_content">
+                                    <div class="oe_kanban_primary">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <div t-if="record.partner_id.raw_value">
+                                            <span class="text-muted">العميل: </span>
+                                            <field name="partner_id"/>
+                                        </div>
+                                        <div>
+                                            <span class="text-muted">القيمة: </span>
+                                            <field name="contract_value"
+                                                   widget="monetary"
+                                                   options="{'currency_field': 'currency_id'}"/>
+                                        </div>
+                                        <div>
+                                            <span class="text-muted">من </span>
+                                            <field name="date_start"/>
+                                            <span class="text-muted"> إلى </span>
+                                            <field name="date_end"/>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="o_kanban_record_bottom_left">
+                                            <span class="text-muted">المسؤول: </span>
+                                            <field name="user_id"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="contract_management_action"
+                model="ir.actions.act_window">
+            <field name="name">العقود</field>
+            <field name="res_model">contract.management</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="contract_management_kanban"/>
+            <field name="search_view_id"
+                   ref="contract_management_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    أنشئ عقدك الأول
+                </p>
+                <p>
+                    إدارة عقود الشركة مع ربط المشاريع والمبيعات والفواتير
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="contract_management_menu_root"
+                  name="العقود"
+                  sequence="30"/>
+        <menuitem id="contract_management_menu"
+                  name="جميع العقود"
+                  parent="contract_management_menu_root"
+                  action="contract_management_action"
+                  sequence="10"/>
+
+    </data>
+</odoo>

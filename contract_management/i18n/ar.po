@@ -1,0 +1,82 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#   * contract_management
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: 2024-01-01 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%%100>=3 && n%%100<=10 ? 3 : n%%100>=11 && n%%100<=99 ? 4 : 5;\n"
+
+#. module: contract_management
+#: model:ir.actions.act_window,name:contract_management.contract_management_action
+msgid "Contracts"
+msgstr "العقود"
+
+#. module: contract_management
+#: model:ir.actions.act_window,name:contract_management.contract_management_action
+msgid "All Contracts"
+msgstr "جميع العقود"
+
+#. module: contract_management
+#: model:ir.model,name:contract_management.model_contract_management
+msgid "Contract Management"
+msgstr "إدارة العقود"
+
+#. module: contract_management
+#: model:ir.model,name:contract_management.model_contract_stage
+msgid "Contract Stage"
+msgstr "مراحل العقد"
+
+#. module: contract_management
+#: model:ir.model,name:contract_management.model_contract_visit_wizard
+msgid "Contract Visit Wizard"
+msgstr "معالج الزيارات الميدانية"
+
+#. module: contract_management
+#: model:ir.model,name:contract_management.model_contract_invoice_split_wizard
+msgid "Contract Invoice Split Wizard"
+msgstr "معالج تقسيم الفواتير"
+
+#. module: contract_management
+#: model:ir.model,name:contract_management.model_contract_invoice_split_line
+msgid "Contract Invoice Split Line"
+msgstr "سطر تقسيم الفاتورة"
+
+#. module: contract_management
+#: model:ir.cron,name:contract_management.ir_cron_visit_reminder
+msgid "Visit Reminder"
+msgstr "تذكير مواعيد الزيارات الميدانية"
+
+#. module: contract_management
+#: model:ir.cron,name:contract_management.ir_cron_invoice_reminder
+msgid "Invoice Reminder"
+msgstr "تذكير مواعيد تحصيل الفواتير"
+
+#. module: contract_management
+#: model:ir.model.fields,help:contract_management.field_contract_management__contract_value
+msgid "Total value of the contract"
+msgstr "القيمة الإجمالية للعقد"
+
+#. module: contract_management
+#: model:ir.model.fields,help:contract_management.field_contract_management__stage_id
+msgid "Current stage of the contract"
+msgstr "المرحلة الحالية للعقد"
+
+#. module: contract_management
+#: model:ir.ui.menu,name:contract_management.contract_management_menu_root
+msgid "Contracts"
+msgstr "العقود"
+
+#. module: contract_management
+#: model:ir.ui.menu,name:contract_management.contract_management_menu
+msgid "All Contracts"
+msgstr "جميع العقود"

@@ -1,0 +1,110 @@
+<odoo>
+    <data>
+
+        <record id="contract_invoice_split_wizard_form"
+                model="ir.ui.view">
+            <field name="name">contract.invoice.split.wizard.form</field>
+            <field name="model">contract.invoice.split.wizard</field>
+            <field name="arch" type="xml">
+                <form string="تقسيم الفواتير">
+
+                    <group>
+                        <group string="معلومات العقد">
+                            <field name="sale_order_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="contract_value"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                        <group string="الدفعة المقدمة (اختياري)">
+                            <field name="has_advance"/>
+                            <field name="advance_amount"
+                                   invisible="not has_advance"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="remaining_amount"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+
+                    <group string="إعدادات التقسيم"
+                           invisible="remaining_amount == 0">
+                        <group>
+                            <field name="split_method" widget="radio" options="{'horizontal': true}"/>
+                            <field name="invoice_count"/>
+                            <field name="uniform_percentage"
+                                   invisible="split_method != 'equal'"/>
+                        </group>
+                        <group>
+                            <field name="first_invoice_date"/>
+                            <field name="recurrence_type"/>
+                            <field name="recurrence_interval"
+                                   invisible="recurrence_type == False"/>
+                        </group>
+                    </group>
+
+                    <field name="line_ids"
+                           nolabel="1"
+                           invisible="remaining_amount == 0">
+                        <tree editable="bottom"
+                              decoration-danger="not date or percentage == 0"
+                              decoration-success="percentage > 0 and date">
+                            <field name="sequence" widget="handle"/>
+                            <field name="label"/>
+                            <field name="date"/>
+                            <field name="percentage"
+                                   invisible="parent.split_method == 'equal'"/>
+                            <field name="percentage"
+                                   readonly="1"
+                                   invisible="parent.split_method != 'equal'"/>
+                            <field name="amount" widget="monetary"/>
+                        </tree>
+                    </field>
+
+                    <div class="alert alert-danger"
+                         invisible="split_method != 'custom' or (total_percentage > 99.99 and total_percentage &lt; 100.01)"
+                         role="alert">
+                        مجموع النسب يجب أن يساوي 100%
+                        (الحالي: <field name="total_percentage"/>%)
+                    </div>
+                    <div class="alert alert-success"
+                         invisible="split_method != 'custom' or not (total_percentage > 99.99 and total_percentage &lt; 100.01)"
+                         role="alert">
+                        مجموع النسب صحيح (100%)
+                    </div>
+
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="split_total">
+                        <field name="advance_amount"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"
+                               invisible="not has_advance"
+                               string="الدفعة المقدمة"/>
+                        <field name="total_split_amount"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"
+                               string="مجموع الدفعات المقسمة"/>
+                        <field name="grand_total"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"
+                               string="الإجمالي الكلي"
+                               decoration-danger="grand_total != contract_value"
+                               decoration-success="grand_total == contract_value"/>
+                    </group>
+
+                    <footer>
+                        <button name="action_confirm_split"
+                                type="object"
+                                string="تأكيد وإنشاء الفواتير"
+                                class="btn-primary"/>
+                        <button string="إلغاء"
+                                class="btn-secondary"
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

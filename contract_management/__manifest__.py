@@ -1,0 +1,22 @@
+{
+    "name": "Contract Management",
+    "version": "17.0.1.0.0",
+    "category": "Services",
+    "description": "Contract Management",
+    "author": "Anwer",
+    "depends": ["project", "sale", "account", "mail"],
+    "data": [
+        "security/ir.model.access.csv",
+        "data/contract_stages.xml",
+        "data/cron_jobs.xml",
+        "reports/contract_report.xml",
+        "views/contract_views.xml",
+        "views/sale_order_inherit_views.xml",
+        "views/project_inherit_views.xml",
+        "views/visit_wizard_views.xml",
+        "views/invoice_split_wizard_views.xml",
+    ],
+    "installable": True,
+    "application": True,
+    "license": "LGPL-3",
+}

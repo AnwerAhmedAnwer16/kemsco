@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_contract_management_user,contract.management.user,model_contract_management,base.group_user,1,1,1,0
+access_contract_management_manager,contract.management.manager,model_contract_management,base.group_system,1,1,1,1
+access_contract_stage_user,contract.stage.user,model_contract_stage,base.group_user,1,0,0,0
+access_contract_stage_manager,contract.stage.manager,model_contract_stage,base.group_system,1,1,1,1
+access_contract_visit_wizard_user,contract.visit.wizard.user,model_contract_visit_wizard,base.group_user,1,1,1,1
+access_contract_invoice_split_wizard_user,contract.invoice.split.wizard.user,model_contract_invoice_split_wizard,base.group_user,1,1,1,1
+access_contract_invoice_split_line_user,contract.invoice.split.line.user,model_contract_invoice_split_line,base.group_user,1,1,1,1
