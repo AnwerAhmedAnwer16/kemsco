@@ -22,4 +22,17 @@
 
         </field>
     </record>
+
+    <record id="view_project_po_inherited" model="ir.ui.view">
+        <field name="name">project.project.tree.po.inherited</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="currency_id" column_invisible="True"/>
+                <field name="purchase_order_count"/>
+                <field name="purchase_order_total" widget="monetary"/>
+            </field>
+        </field>
+    </record>
 </odoo>

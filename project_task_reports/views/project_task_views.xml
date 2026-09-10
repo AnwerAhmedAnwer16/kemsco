@@ -70,4 +70,17 @@
             </xpath>
         </field>
     </record>
+
+    <record id="project_task_view_tree_po_inherited" model="ir.ui.view">
+        <field name="name">project.task.view.tree.po.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_task_view_tree_main_base"/>
+        <field name="arch" type="xml">
+            <field name="project_id" position="after">
+                <field name="currency_id" column_invisible="True"/>
+                <field name="purchase_order_count"/>
+                <field name="purchase_order_total" widget="monetary"/>
+            </field>
+        </field>
+    </record>
 </odoo>

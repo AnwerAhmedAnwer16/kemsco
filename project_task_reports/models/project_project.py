@@ -7,11 +7,16 @@ class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     purchase_order_ids = fields.One2many('purchase.order', 'project_id', string="Purchase Orders")
-    purchase_order_count = fields.Integer(string="Purchase Orders", compute='_compute_purchase_order_stats')
+    purchase_order_count = fields.Integer(
+        string="Purchase Orders",
+        compute='_compute_purchase_order_stats',
+        store=True,
+    )
     purchase_order_total = fields.Monetary(
         string="PO Total",
         compute='_compute_purchase_order_stats',
         currency_field='currency_id',
+        store=True,
     )
 
     @api.depends('purchase_order_ids.amount_total', 'purchase_order_ids.state')

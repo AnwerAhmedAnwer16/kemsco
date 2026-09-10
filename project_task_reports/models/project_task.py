@@ -19,11 +19,16 @@ class ProjectTask(models.Model):
     customer_signature = fields.Binary(string="Customer Signature", attachment=True, help="Customer signature for report approval.")
 
     purchase_order_ids = fields.One2many('purchase.order', 'task_id', string="Purchase Orders")
-    purchase_order_count = fields.Integer(string="Purchase Orders", compute='_compute_purchase_order_stats')
+    purchase_order_count = fields.Integer(
+        string="Purchase Orders",
+        compute='_compute_purchase_order_stats',
+        store=True,
+    )
     purchase_order_total = fields.Monetary(
         string="PO Total",
         compute='_compute_purchase_order_stats',
         currency_field='currency_id',
+        store=True,
     )
     currency_id = fields.Many2one('res.currency', string="Currency", related='company_id.currency_id')
 
