@@ -1,0 +1,25 @@
+<!-- views/project_project_views.xml -->
+<odoo>
+    <record id="edit_project_po_inherited" model="ir.ui.view">
+        <field name="name">project.edit.project.po.inherited</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="currency_id" invisible="1"/>
+                <field name="purchase_order_count" invisible="1"/>
+                <button name="action_view_purchase_orders" type="object" class="oe_stat_button" icon="fa-shopping-cart"
+                        groups="purchase.group_purchase_user" invisible="purchase_order_count == 0">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="purchase_order_total" widget="monetary" nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">Total Expenses</span>
+                    </div>
+                </button>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

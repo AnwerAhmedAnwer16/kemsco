@@ -10,6 +10,25 @@
                 <field name="report_type" widget="selection"/>
             </xpath>
 
+            <xpath expr="//header" position="inside">
+                <button name="action_create_purchase_order" string="Create Purchase Order" type="object" class="btn-primary"
+                        groups="purchase.group_purchase_user"/>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="currency_id" invisible="1"/>
+                <field name="purchase_order_count" invisible="1"/>
+                <button name="action_view_purchase_orders" type="object" class="oe_stat_button" icon="fa-shopping-cart"
+                        groups="purchase.group_purchase_user" invisible="purchase_order_count == 0">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="purchase_order_total" widget="monetary" nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">Expenses</span>
+                    </div>
+                </button>
+            </xpath>
+
             <xpath expr="//notebook" position="inside">
                 
                 <!-- Page 1: Maintenance -->

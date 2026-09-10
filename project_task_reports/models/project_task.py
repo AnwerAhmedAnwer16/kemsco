@@ -18,6 +18,44 @@ class ProjectTask(models.Model):
     maintenance_activity_ids = fields.One2many('maintenance.activity.line', 'task_id', string="Maintenance Activities")
     customer_signature = fields.Binary(string="Customer Signature", attachment=True, help="Customer signature for report approval.")
 
+    purchase_order_ids = fields.One2many('purchase.order', 'task_id', string="Purchase Orders")
+    purchase_order_count = fields.Integer(string="Purchase Orders", compute='_compute_purchase_order_stats')
+    purchase_order_total = fields.Monetary(
+        string="PO Total",
+        compute='_compute_purchase_order_stats',
+        currency_field='currency_id',
+    )
+    currency_id = fields.Many2one('res.currency', string="Currency", related='company_id.currency_id')
+
+    @api.depends('purchase_order_ids.amount_total', 'purchase_order_ids.state')
+    def _compute_purchase_order_stats(self):
+        for task in self:
+            orders = task.sudo().purchase_order_ids.filtered(lambda po: po.state != 'cancel')
+            task.purchase_order_count = len(orders)
+            task.purchase_order_total = sum(orders.mapped('amount_total'))
+
+    def action_view_purchase_orders(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Purchase Orders',
+            'res_model': 'purchase.order',
+            'view_mode': 'tree,form',
+            'domain': [('task_id', '=', self.id)],
+            'context': {'default_task_id': self.id},
+        }
+
+    def action_create_purchase_order(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'New Purchase Order',
+            'res_model': 'purchase.order',
+            'view_mode': 'form',
+            'target': 'current',
+            'context': {'default_task_id': self.id},
+        }
+
     @api.onchange('report_type')
     def _onchange_report_type(self):
         """Automatically populate the checklist when a report type is selected."""

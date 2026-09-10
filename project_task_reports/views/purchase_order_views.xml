@@ -1,0 +1,16 @@
+<!-- views/purchase_order_views.xml -->
+<odoo>
+    <record id="purchase_order_form_task_inherited" model="ir.ui.view">
+        <field name="name">purchase.order.form.task.inherited</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="task_id" readonly="state in ['cancel', 'done', 'purchase']"/>
+                <field name="project_id" invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,338 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project_task_reports
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-10 00:00+0000\n"
+"PO-Revision-Date: 2026-09-10 00:00+0000\n"
+"Last-Translator: anwer\n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_project_task__report_type
+msgid "Report Type"
+msgstr "نوع التقرير"
+
+#. module: project_task_reports
+#: model:ir.model.fields,help:project_task_reports.field_project_task__report_type
+msgid "Select the type of report to fill out for this task."
+msgstr "اختر نوع التقرير المراد تعبئته لهذه المهمة."
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__project_task__report_type__maintenance
+#: model_terms:ir.ui.view,arch_db:project_task_reports.view_task_form_reports_inherited
+msgid "Maintenance"
+msgstr "الصيانة"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__project_task__report_type__technical_report
+#: model_terms:ir.ui.view,arch_db:project_task_reports.view_task_form_reports_inherited
+msgid "Technical Report"
+msgstr "تقرير فني"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_project_task__technical_checklist_ids
+msgid "Technical Checklist"
+msgstr "قائمة التحقق الفنية"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_project_task__maintenance_activity_ids
+msgid "Maintenance Activities"
+msgstr "أنشطة الصيانة"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_project_task__customer_signature
+msgid "Customer Signature"
+msgstr "توقيع العميل"
+
+#. module: project_task_reports
+#: model:ir.model.fields,help:project_task_reports.field_project_task__customer_signature
+msgid "Customer signature for report approval."
+msgstr "توقيع العميل للموافقة على التقرير."
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_project_task__purchase_order_ids
+#: model:ir.model.fields,field_description:project_task_reports.field_project_task__purchase_order_count
+#: model:ir.model.fields,field_description:project_task_reports.field_project_project__purchase_order_ids
+#: model:ir.model.fields,field_description:project_task_reports.field_project_project__purchase_order_count
+msgid "Purchase Orders"
+msgstr "أوامر الشراء"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_project_task__purchase_order_total
+#: model:ir.model.fields,field_description:project_task_reports.field_project_project__purchase_order_total
+msgid "PO Total"
+msgstr "إجمالي أوامر الشراء"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_project_task__currency_id
+msgid "Currency"
+msgstr "العملة"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_purchase_order__task_id
+#: model:ir.model.fields,field_description:project_task_reports.field_checklist_line__task_id
+#: model:ir.model.fields,field_description:project_task_reports.field_maintenance_activity_line__task_id
+msgid "Task"
+msgstr "المهمة"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_purchase_order__project_id
+msgid "Project"
+msgstr "المشروع"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_checklist_line__sequence
+#: model:ir.model.fields,field_description:project_task_reports.field_maintenance_activity_line__sequence
+msgid "Sequence"
+msgstr "التسلسل"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_checklist_line__name
+msgid "Description"
+msgstr "الوصف"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_checklist_line__description
+msgid "Item"
+msgstr "البند"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_checklist_line__status
+msgid "Status"
+msgstr "الحالة"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_checklist_line__display_type
+msgid "Display Type"
+msgstr "نوع العرض"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_checklist_line__remarks
+#: model:ir.model.fields,field_description:project_task_reports.field_maintenance_activity_line__remarks
+msgid "Remarks"
+msgstr "الملاحظات"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_maintenance_activity_line__activity_description
+msgid "Activity"
+msgstr "النشاط"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__display_type__line_section
+msgid "Section"
+msgstr "قسم"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__display_type__line_note
+msgid "Note"
+msgstr "ملاحظة"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__status__ok
+msgid "OK"
+msgstr "سليم"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__status__not_ok
+msgid "Not OK"
+msgstr "غير سليم"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__status__na
+msgid "N/A"
+msgstr "لا ينطبق"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__hose_reels
+msgid "HOSE REELS SYS."
+msgstr "نظام بكرات الخراطيم"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__sprinklers
+msgid "SPRINKLERS SYS."
+msgstr "نظام المرشات"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__dry_wet_riser
+msgid "(DRY & WET) RISER"
+msgstr "الأنبوب الصاعد (جاف ورطب)"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__main_pumps
+msgid "MAIN PUMPS"
+msgstr "المضخات الرئيسية"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__jockey_pump
+msgid "JOCKEY PUMP"
+msgstr "مضخة الجوكي"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__extinguishers
+msgid "FIRE EXTINGUISHERS"
+msgstr "طفايات الحريق"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__alarm_panel
+msgid "FIRE ALARM CONTROL PANEL"
+msgstr "لوحة التحكم بإنذار الحريق"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__call_points
+msgid "CALL POINTS"
+msgstr "نقاط الاتصال"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__smoke_detectors
+msgid "SMOKE DETECTORS"
+msgstr "كواشف الدخان"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__heat_detectors
+msgid "HEAT DETECTORS"
+msgstr "كواشف الحرارة"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__alarm_bells
+msgid "ALARM BELLS"
+msgstr "أجراس الإنذار"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__smoke_van
+msgid "SMOKE VAN"
+msgstr "مروحة طرد الدخان"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__fresh_air_van
+msgid "FRESH AIR VAN"
+msgstr "مروحة الهواء النقي"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__exit_light
+msgid "EXIT LIGHT"
+msgstr "إضاءة الخروج"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__checklist_line__description__emergency_light
+msgid "EMERGENCY LIGHT"
+msgstr "إضاءة الطوارئ"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__oil_leakage
+msgid "Check for any oil leakage"
+msgstr "التحقق من وجود أي تسرب للزيت"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__coolant_level
+msgid "Check coolant level"
+msgstr "التحقق من مستوى سائل التبريد"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__oil_level
+msgid "Check oil level"
+msgstr "التحقق من مستوى الزيت"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__fuel_level
+msgid "Check fuel level"
+msgstr "التحقق من مستوى الوقود"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__fan_belt
+msgid "Check fan belt tension"
+msgstr "التحقق من شد سير المروحة"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__water_pump
+msgid "Check water pump for any leakage"
+msgstr "التحقق من مضخة المياه بحثًا عن أي تسرب"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__alternator_noise
+msgid "Check alternator bearing noise"
+msgstr "التحقق من ضجيج محمل المولد"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__battery_voltage
+msgid "Check battery voltage"
+msgstr "التحقق من جهد البطارية"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__battery_electrolyte
+msgid "Check battery electrolyte level"
+msgstr "التحقق من مستوى إلكتروليت البطارية"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__battery_terminal
+msgid "Check battery terminal & clean"
+msgstr "التحقق من أطراف البطارية وتنظيفها"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__electrical_connections
+msgid "Check all electrical connections"
+msgstr "التحقق من جميع التوصيلات الكهربائية"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__air_filter
+msgid "Check air filter element"
+msgstr "التحقق من عنصر فلتر الهواء"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__engine_mounting
+msgid "Check engine mounting bolts"
+msgstr "التحقق من مسامير تثبيت المحرك"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__exhaust_system
+msgid "Check exhaust system for leakage"
+msgstr "التحقق من نظام العادم بحثًا عن أي تسرب"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__abnormal_noise
+msgid "Run generator & check for abnormal noise"
+msgstr "تشغيل المولد والتحقق من وجود ضجيج غير طبيعي"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__voltage_frequency
+msgid "Check voltage & frequency"
+msgstr "التحقق من الجهد والتردد"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__control_panel
+msgid "Check control panel operation"
+msgstr "التحقق من تشغيل لوحة التحكم"
+
+#. module: project_task_reports
+#: model:ir.model.fields.selection,name:project_task_reports.selection__maintenance_activity_line__activity_description__general_cleaning
+msgid "General cleaning of generator"
+msgstr "التنظيف العام للمولد"
+
+#. module: project_task_reports
+#: model_terms:ir.ui.view,arch_db:project_task_reports.view_task_form_reports_inherited
+msgid "Signature"
+msgstr "التوقيع"
+
+#. module: project_task_reports
+#: model_terms:ir.ui.view,arch_db:project_task_reports.view_task_form_reports_inherited
+msgid "Create Purchase Order"
+msgstr "إنشاء أمر شراء"
+
+#. module: project_task_reports
+#: model_terms:ir.ui.view,arch_db:project_task_reports.view_task_form_reports_inherited
+msgid "Expenses"
+msgstr "المصروفات"
+
+#. module: project_task_reports
+#: model_terms:ir.ui.view,arch_db:project_task_reports.edit_project_po_inherited
+msgid "Total Expenses"
+msgstr "إجمالي المصروفات"
