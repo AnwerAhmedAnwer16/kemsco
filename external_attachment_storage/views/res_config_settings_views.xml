@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.external_attachment_storage</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='general_settings']" position="inside">
+                <block title="External Attachment Storage" name="external_attachment_storage_container">
+                    <setting id="external_attachment_storage_setting"
+                             string="External Attachment Storage"
+                             help="Store newly uploaded attachments on an external S3-compatible object storage (AWS S3, Cloudflare R2, MinIO, ...). Existing attachments always keep using the local Odoo filestore.">
+                        <field name="external_attachment_enabled"/>
+                        <div class="mt8" invisible="not external_attachment_enabled">
+                            <div class="row mb8">
+                                <label for="external_attachment_provider" class="col-lg-3 o_light_label"/>
+                                <field name="external_attachment_provider" class="col-lg-6"/>
+                            </div>
+                            <div class="row mb8">
+                                <label for="external_attachment_endpoint_url" class="col-lg-3 o_light_label"/>
+                                <field name="external_attachment_endpoint_url" class="col-lg-6"
+                                       placeholder="Leave empty for AWS S3. https://&lt;account-id&gt;.r2.cloudflarestorage.com for Cloudflare R2"/>
+                            </div>
+                            <div class="row mb8">
+                                <label for="external_attachment_bucket" class="col-lg-3 o_light_label"/>
+                                <field name="external_attachment_bucket" class="col-lg-6" placeholder="my-odoo-attachments"/>
+                            </div>
+                            <div class="row mb8">
+                                <label for="external_attachment_region" class="col-lg-3 o_light_label"/>
+                                <field name="external_attachment_region" class="col-lg-6" placeholder="us-east-1"/>
+                            </div>
+                            <div class="row mb8">
+                                <label for="external_attachment_base_path" class="col-lg-3 o_light_label"/>
+                                <field name="external_attachment_base_path" class="col-lg-6" placeholder="attachments"/>
+                            </div>
+                            <div class="row mb8">
+                                <label for="external_attachment_access_key_id" class="col-lg-3 o_light_label"/>
+                                <field name="external_attachment_access_key_id" class="col-lg-6"
+                                       placeholder="Leave empty to use EAS_ACCESS_KEY_ID or the boto3 credential chain"/>
+                            </div>
+                            <div class="row mb8">
+                                <label for="external_attachment_secret_access_key" class="col-lg-3 o_light_label"/>
+                                <field name="external_attachment_secret_access_key" class="col-lg-6"
+                                       password="True"
+                                       placeholder="Leave empty to use EAS_SECRET_ACCESS_KEY or the boto3 credential chain"/>
+                            </div>
+                            <div class="row mb8">
+                                <button name="action_test_external_attachment_connection"
+                                        type="object"
+                                        string="Test Connection"
+                                        icon="fa-plug"
+                                        class="btn-secondary"/>
+                            </div>
+                            <div class="text-muted">
+                                Only new attachments are stored externally. Existing attachments are never
+                                modified or migrated. Downloads keep going through Odoo with the normal
+                                access controls; no presigned URLs are used.
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

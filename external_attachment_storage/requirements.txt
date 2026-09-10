@@ -1,0 +1,4 @@
+# Python dependencies of the external_attachment_storage addon.
+# Install in the Odoo virtual environment:
+#     pip install -r external_attachment_storage/requirements.txt
+boto3>=1.26.0
