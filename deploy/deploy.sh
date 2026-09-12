@@ -50,7 +50,9 @@ MODULES="$(
     | awk -F/ '{print $1}' \
     | sort -u \
     | while read -r d; do
-          [ -f "$REPO_DIR/$d/__manifest__.py" ] && echo "$d"
+          if [ -f "$REPO_DIR/$d/__manifest__.py" ]; then
+              echo "$d"
+          fi
       done \
     | tr '\n' ',' | sed 's/,$//'
 )"
