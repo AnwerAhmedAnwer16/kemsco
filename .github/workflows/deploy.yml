@@ -14,19 +14,50 @@ jobs:
     name: Pull, upgrade changed modules, restart Odoo
     runs-on: ubuntu-latest
     steps:
-      - name: Run remote deploy script over SSH
-        uses: appleboy/ssh-action@v1.2.5
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
-          command_timeout: 30m
-          script: |
-            set -e
-            REPO="$HOME/odooProjects/odoo17/kemosco"
-            cd "$REPO"
-            OLD="$(git rev-parse HEAD)"
-            git fetch --prune origin
-            git reset --hard origin/main
-            DEPLOY_OLD_SHA="$OLD" bash deploy/deploy.sh
+          fetch-depth: 0
+
+      - name: Compute changed modules
+        id: changed
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" != "push" ]; then
+            echo "modules=auto" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
+            echo "modules=auto" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          MODULES="$(git diff --name-only "$BEFORE" "${{ github.sha }}" \
+            | awk -F/ '{print $1}' | sort -u \
+            | while read -r d; do
+                  if [ -f "$d/__manifest__.py" ]; then echo "$d"; fi
+              done \
+            | tr '\n' ',' | sed 's/,$//')"
+          echo "modules=$MODULES" >> "$GITHUB_OUTPUT"
+
+      - name: Run remote deploy (with retry)
+        uses: Wandalen/wretry.action@v3.8.0
+        with:
+          attempt_limit: 3
+          attempt_delay: 20000
+          action: appleboy/ssh-action@v1.2.5
+          with: |
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USER }}
+            key: ${{ secrets.SSH_PRIVATE_KEY }}
+            port: ${{ secrets.SSH_PORT || 22 }}
+            timeout: 60s
+            command_timeout: 30m
+            script: |
+              set -e
+              REPO="$HOME/odooProjects/odoo17/kemosco"
+              cd "$REPO"
+              OLD="$(git rev-parse HEAD)"
+              git fetch --prune origin
+              git reset --hard origin/main
+              DEPLOY_OLD_SHA="$OLD" DEPLOY_MODULES="${{ steps.changed.outputs.modules }}" bash deploy/deploy.sh

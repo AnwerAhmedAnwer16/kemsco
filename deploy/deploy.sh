@@ -45,17 +45,24 @@ fi
 log "Deploying $OLD -> $NEW"
 
 # Collect changed top-level directories that contain an Odoo manifest.
-MODULES="$(
-    git diff --name-only "$OLD" "$NEW" \
-    | awk -F/ '{print $1}' \
-    | sort -u \
-    | while read -r d; do
-          if [ -f "$REPO_DIR/$d/__manifest__.py" ]; then
-              echo "$d"
-          fi
-      done \
-    | tr '\n' ',' | sed 's/,$//'
-)"
+# When CI passes an explicit list (DEPLOY_MODULES), use it so retries are
+# idempotent even if the previous attempt already updated the working tree.
+if [ "${DEPLOY_MODULES+set}" = "set" ] && [ "$DEPLOY_MODULES" != "auto" ]; then
+    MODULES="$DEPLOY_MODULES"
+    log "Modules from CI: ${MODULES:-<none>}"
+else
+    MODULES="$(
+        git diff --name-only "$OLD" "$NEW" \
+        | awk -F/ '{print $1}' \
+        | sort -u \
+        | while read -r d; do
+              if [ -f "$REPO_DIR/$d/__manifest__.py" ]; then
+                  echo "$d"
+              fi
+          done \
+        | tr '\n' ',' | sed 's/,$//'
+    )"
+fi
 
 if [ -n "$MODULES" ] && [ -n "$ODOO_DB" ]; then
     log "Upgrading changed modules: $MODULES"
