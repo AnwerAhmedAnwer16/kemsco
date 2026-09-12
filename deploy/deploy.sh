@@ -39,30 +39,36 @@ else
 fi
 
 if [ "$OLD" = "$NEW" ]; then
+    log "Working tree already at $NEW."
+fi
+
+# Modules changed on the server between the deployed and the new revision.
+SERVER_MODULES="$(
+    git diff --name-only "$OLD" "$NEW" \
+    | awk -F/ '{print $1}' \
+    | sort -u \
+    | while read -r d; do
+          if [ -f "$REPO_DIR/$d/__manifest__.py" ]; then
+              echo "$d"
+          fi
+      done
+)"
+
+# Modules reported by CI for this push (keeps retries idempotent).
+CI_MODULES=""
+if [ "${DEPLOY_MODULES+set}" = "set" ] && [ "$DEPLOY_MODULES" != "auto" ] && [ -n "$DEPLOY_MODULES" ]; then
+    CI_MODULES="$(printf '%s' "$DEPLOY_MODULES" | tr ',' '\n')"
+fi
+
+MODULES="$(printf '%s\n%s\n' "$SERVER_MODULES" "$CI_MODULES" \
+    | sed '/^[[:space:]]*$/d' | sort -u | tr '\n' ',' | sed 's/,$//')"
+
+if [ -z "$MODULES" ] && [ "$OLD" = "$NEW" ]; then
     log "Already up to date ($NEW). Nothing to do."
     exit 0
 fi
 log "Deploying $OLD -> $NEW"
-
-# Collect changed top-level directories that contain an Odoo manifest.
-# When CI passes an explicit list (DEPLOY_MODULES), use it so retries are
-# idempotent even if the previous attempt already updated the working tree.
-if [ "${DEPLOY_MODULES+set}" = "set" ] && [ "$DEPLOY_MODULES" != "auto" ]; then
-    MODULES="$DEPLOY_MODULES"
-    log "Modules from CI: ${MODULES:-<none>}"
-else
-    MODULES="$(
-        git diff --name-only "$OLD" "$NEW" \
-        | awk -F/ '{print $1}' \
-        | sort -u \
-        | while read -r d; do
-              if [ -f "$REPO_DIR/$d/__manifest__.py" ]; then
-                  echo "$d"
-              fi
-          done \
-        | tr '\n' ',' | sed 's/,$//'
-    )"
-fi
+log "Modules to upgrade: ${MODULES:-<none>}"
 
 if [ -n "$MODULES" ] && [ -n "$ODOO_DB" ]; then
     log "Upgrading changed modules: $MODULES"
