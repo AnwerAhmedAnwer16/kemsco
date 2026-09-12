@@ -151,6 +151,34 @@
                             </div>
                         </t>
 
+                        <!-- Attachment Images Section -->
+                        <t t-set="report_images" t-value="(o.message_ids.attachment_ids | o.attachment_ids).filtered(lambda a: a.mimetype and a.mimetype.startswith('image/'))"/>
+                        <div t-if="report_images" class="mt-4" style="page-break-inside: avoid;">
+                            <h4 class="mt-4">Attachments</h4>
+                            <table class="table table-bordered table-sm">
+                                <thead style="background-color: #e9ecef;">
+                                    <tr>
+                                        <th class="text-center" style="width: 5%;">#</th>
+                                        <th style="width: 35%;">File Name</th>
+                                        <th class="text-center" style="width: 60%;">Image</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="img_counter" t-value="0"/>
+                                    <t t-foreach="report_images" t-as="att">
+                                        <t t-set="img_counter" t-value="img_counter + 1"/>
+                                        <tr>
+                                            <td class="text-center"><span t-esc="img_counter"/></td>
+                                            <td><span t-esc="att.name"/></td>
+                                            <td class="text-center">
+                                                <img t-att-src="image_data_uri(att.datas)" style="max-height: 250px; max-width: 100%;" alt="Attachment"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+
                         <!-- Customer Signature Section -->
                         <div class="row mt-5" t-if="o.customer_signature" style="page-break-inside: avoid;">
                             <div class="col-6 offset-6 text-center">

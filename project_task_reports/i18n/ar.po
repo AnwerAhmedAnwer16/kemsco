@@ -340,3 +340,18 @@ msgstr "المصروفات"
 #: model_terms:ir.ui.view,arch_db:project_task_reports.edit_project_po_inherited
 msgid "Total Expenses"
 msgstr "إجمالي المصروفات"
+
+#. module: project_task_reports
+#: model_terms:ir.ui.view,arch_db:project_task_reports.project_task_report_template
+msgid "Attachments"
+msgstr "المرفقات"
+
+#. module: project_task_reports
+#: model_terms:ir.ui.view,arch_db:project_task_reports.project_task_report_template
+msgid "File Name"
+msgstr "اسم الملف"
+
+#. module: project_task_reports
+#: model_terms:ir.ui.view,arch_db:project_task_reports.project_task_report_template
+msgid "Image"
+msgstr "الصورة"
