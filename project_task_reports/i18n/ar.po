@@ -61,11 +61,15 @@ msgstr "توقيع العميل للموافقة على التقرير."
 
 #. module: project_task_reports
 #: model:ir.model.fields,field_description:project_task_reports.field_project_task__purchase_order_ids
-#: model:ir.model.fields,field_description:project_task_reports.field_project_task__purchase_order_count
 #: model:ir.model.fields,field_description:project_task_reports.field_project_project__purchase_order_ids
-#: model:ir.model.fields,field_description:project_task_reports.field_project_project__purchase_order_count
 msgid "Purchase Orders"
 msgstr "أوامر الشراء"
+
+#. module: project_task_reports
+#: model:ir.model.fields,field_description:project_task_reports.field_project_task__purchase_order_count
+#: model:ir.model.fields,field_description:project_task_reports.field_project_project__purchase_order_count
+msgid "PO Count"
+msgstr "عدد أوامر الشراء"
 
 #. module: project_task_reports
 #: model:ir.model.fields,field_description:project_task_reports.field_project_task__purchase_order_total

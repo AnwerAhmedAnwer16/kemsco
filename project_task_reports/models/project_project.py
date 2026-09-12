@@ -8,7 +8,7 @@ class ProjectProject(models.Model):
 
     purchase_order_ids = fields.One2many('purchase.order', 'project_id', string="Purchase Orders")
     purchase_order_count = fields.Integer(
-        string="Purchase Orders",
+        string="PO Count",
         compute='_compute_purchase_order_stats',
         store=True,
     )
