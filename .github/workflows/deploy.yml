@@ -40,24 +40,36 @@ jobs:
             | tr '\n' ',' | sed 's/,$//')"
           echo "modules=$MODULES" >> "$GITHUB_OUTPUT"
 
-      - name: Run remote deploy (with retry)
-        uses: Wandalen/wretry.action@v3.8.0
-        with:
-          attempt_limit: 3
-          attempt_delay: 20000
-          action: appleboy/ssh-action@v1.2.5
-          with: |
-            host: ${{ secrets.SSH_HOST }}
-            username: ${{ secrets.SSH_USER }}
-            key: ${{ secrets.SSH_PRIVATE_KEY }}
-            port: ${{ secrets.SSH_PORT || 22 }}
-            timeout: 60s
-            command_timeout: 30m
-            script: |
-              set -e
-              REPO="$HOME/odooProjects/odoo17/kemosco"
-              cd "$REPO"
-              OLD="$(git rev-parse HEAD)"
-              git fetch --prune origin
-              git reset --hard origin/main
-              DEPLOY_OLD_SHA="$OLD" DEPLOY_MODULES="${{ steps.changed.outputs.modules }}" bash deploy/deploy.sh
+      - name: Set up SSH key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+      - name: Deploy over SSH (retry x3)
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
+          MODULES: ${{ steps.changed.outputs.modules }}
+        run: |
+          set -uo pipefail
+          for attempt in 1 2 3; do
+            echo "::group::Deploy attempt $attempt"
+            if ssh -i "$HOME/.ssh/deploy_key" \
+                 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+                 -o ConnectTimeout=60 \
+                 -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
+                 "DEPLOY_MODULES='$MODULES' bash -s" < deploy/remote.sh; then
+              echo "::endgroup::"
+              echo "Deploy succeeded on attempt $attempt"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "Attempt $attempt failed"
+            sleep 20
+          done
+          echo "Deploy failed after 3 attempts"
+          exit 1
