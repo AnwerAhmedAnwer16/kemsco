@@ -1,0 +1,33 @@
+name: Deploy to Odoo server
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-odoo-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Pull, upgrade changed modules, restart Odoo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run remote deploy script over SSH
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script_stop: true
+          command_timeout: 30m
+          script: |
+            set -e
+            REPO="$HOME/odooProjects/odoo17/kemosco"
+            cd "$REPO"
+            OLD="$(git rev-parse HEAD)"
+            git fetch --prune origin
+            git reset --hard origin/main
+            DEPLOY_OLD_SHA="$OLD" bash deploy/deploy.sh
