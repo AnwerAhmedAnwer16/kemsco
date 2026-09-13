@@ -5,3 +5,4 @@ from . import project_project
 from . import checklist_line
 from . import maintenance_activity_line
 from . import purchase_order
+from . import ir_attachment

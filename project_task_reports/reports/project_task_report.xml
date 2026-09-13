@@ -196,12 +196,11 @@
                                     <t t-set="vid_counter" t-value="0"/>
                                     <t t-foreach="report_videos" t-as="att">
                                         <t t-set="vid_counter" t-value="vid_counter + 1"/>
-                                        <t t-set="att_url" t-value="'%s/web/content/%s?download=true%s' % (web_base_url, att.id, ('&amp;access_token=%s' % att.sudo().access_token) if att.sudo().access_token else '')"/>
                                         <tr>
                                             <td class="text-center"><span t-esc="vid_counter"/></td>
                                             <td><span t-esc="att.name"/></td>
                                             <td>
-                                                <a t-att-href="att_url" style="word-break: break-all;"><span t-esc="att_url"/></a>
+                                                <a t-att-href="att.task_report_url" style="word-break: break-all;"><span t-esc="att.task_report_url"/></a>
                                             </td>
                                         </tr>
                                     </t>
