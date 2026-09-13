@@ -61,6 +61,22 @@ class ProjectTask(models.Model):
             'context': {'default_task_id': self.id},
         }
 
+    def _report_attachments(self):
+        """Attachments shown in the printed task report: the task's main
+        attachments plus the ones coming from messages."""
+        self.ensure_one()
+        return self.message_ids.attachment_ids | self.attachment_ids
+
+    def _report_video_attachments(self):
+        """Video attachments of the report, ensuring each one has an access
+        token so the printed links can be opened by users without an Odoo
+        login (the bucket stays private)."""
+        self.ensure_one()
+        videos = self._report_attachments().filtered(
+            lambda att: att.mimetype and att.mimetype.startswith('video/'))
+        videos.sudo().generate_access_token()
+        return videos
+
     @api.onchange('report_type')
     def _onchange_report_type(self):
         """Automatically populate the checklist when a report type is selected."""

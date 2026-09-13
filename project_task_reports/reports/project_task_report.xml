@@ -152,7 +152,7 @@
                         </t>
 
                         <!-- Attachment Images Section -->
-                        <t t-set="report_attachments" t-value="o.message_ids.attachment_ids | o.attachment_ids"/>
+                        <t t-set="report_attachments" t-value="o._report_attachments()"/>
                         <t t-set="report_images" t-value="report_attachments.filtered(lambda a: a.mimetype and a.mimetype.startswith('image/'))"/>
                         <div t-if="report_images" class="mt-4" style="page-break-inside: avoid;">
                             <h4 class="mt-4">Attachments</h4>
@@ -181,7 +181,7 @@
                         </div>
 
                         <!-- Attachment Videos Section (hyperlink only) -->
-                        <t t-set="report_videos" t-value="report_attachments.filtered(lambda a: a.mimetype and a.mimetype.startswith('video/'))"/>
+                        <t t-set="report_videos" t-value="o._report_video_attachments()"/>
                         <div t-if="report_videos" class="mt-4" style="page-break-inside: avoid;">
                             <h4 class="mt-4">Videos</h4>
                             <table class="table table-bordered table-sm">
