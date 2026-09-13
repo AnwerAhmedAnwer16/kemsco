@@ -2,7 +2,7 @@
 
 {
     'name': 'Project Task Reports',
-    'version': '17.0.1.6.0',
+    'version': '17.0.1.7.0',
     'summary': 'Adds dynamic notebook sections with structured checklists and purchase order tracking to Project Tasks.',
     'author': 'anwer',
     'category': 'Project',
