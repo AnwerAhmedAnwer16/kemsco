@@ -152,7 +152,8 @@
                         </t>
 
                         <!-- Attachment Images Section -->
-                        <t t-set="report_images" t-value="(o.message_ids.attachment_ids | o.attachment_ids).filtered(lambda a: a.mimetype and a.mimetype.startswith('image/'))"/>
+                        <t t-set="report_attachments" t-value="o.message_ids.attachment_ids | o.attachment_ids"/>
+                        <t t-set="report_images" t-value="report_attachments.filtered(lambda a: a.mimetype and a.mimetype.startswith('image/'))"/>
                         <div t-if="report_images" class="mt-4" style="page-break-inside: avoid;">
                             <h4 class="mt-4">Attachments</h4>
                             <table class="table table-bordered table-sm">
@@ -172,6 +173,35 @@
                                             <td><span t-esc="att.name"/></td>
                                             <td class="text-center">
                                                 <img t-att-src="image_data_uri(att.datas)" style="max-height: 250px; max-width: 100%;" alt="Attachment"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Attachment Videos Section (hyperlink only) -->
+                        <t t-set="report_videos" t-value="report_attachments.filtered(lambda a: a.mimetype and a.mimetype.startswith('video/'))"/>
+                        <div t-if="report_videos" class="mt-4" style="page-break-inside: avoid;">
+                            <h4 class="mt-4">Videos</h4>
+                            <table class="table table-bordered table-sm">
+                                <thead style="background-color: #e9ecef;">
+                                    <tr>
+                                        <th class="text-center" style="width: 5%;">#</th>
+                                        <th style="width: 45%;">File Name</th>
+                                        <th style="width: 50%;">Link</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="vid_counter" t-value="0"/>
+                                    <t t-foreach="report_videos" t-as="att">
+                                        <t t-set="vid_counter" t-value="vid_counter + 1"/>
+                                        <t t-set="att_url" t-value="'%s/web/content/%s?download=true%s' % (web_base_url, att.id, ('&amp;access_token=%s' % att.sudo().access_token) if att.sudo().access_token else '')"/>
+                                        <tr>
+                                            <td class="text-center"><span t-esc="vid_counter"/></td>
+                                            <td><span t-esc="att.name"/></td>
+                                            <td>
+                                                <a t-att-href="att_url" style="word-break: break-all;"><span t-esc="att_url"/></a>
                                             </td>
                                         </tr>
                                     </t>

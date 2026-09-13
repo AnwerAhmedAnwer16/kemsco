@@ -355,3 +355,13 @@ msgstr "اسم الملف"
 #: model_terms:ir.ui.view,arch_db:project_task_reports.project_task_report_template
 msgid "Image"
 msgstr "الصورة"
+
+#. module: project_task_reports
+#: model_terms:ir.ui.view,arch_db:project_task_reports.project_task_report_template
+msgid "Videos"
+msgstr "الفيديوهات"
+
+#. module: project_task_reports
+#: model_terms:ir.ui.view,arch_db:project_task_reports.project_task_report_template
+msgid "Link"
+msgstr "الرابط"
