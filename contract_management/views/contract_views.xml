@@ -18,18 +18,21 @@
                                 type="object"
                                 string="اعتماد"
                                 class="btn-primary"
+                                groups="contract_management.group_contract_validator"
                                 invisible="stage_sequence != 2"/>
                         <!-- معتمد -->
                         <button name="action_set_active"
                                 type="object"
                                 string="تنشيط"
                                 class="btn-success"
+                                groups="contract_management.group_contract_validator"
                                 invisible="stage_sequence != 3"/>
                         <!-- نشط -->
                         <button name="action_set_done"
                                 type="object"
                                 string="إنهاء"
                                 class="btn-warning"
+                                groups="contract_management.group_contract_validator"
                                 invisible="stage_sequence != 4"/>
                         <button name="action_cancel"
                                 type="object"
@@ -41,6 +44,7 @@
                                 type="object"
                                 string="إعادة تنشيط"
                                 class="btn-secondary"
+                                groups="contract_management.group_contract_validator"
                                 invisible="not stage_is_done and not stage_is_cancelled"/>
                         <!-- عرض السعر -->
                         <button name="action_create_sale_quotation"
@@ -57,7 +61,7 @@
                        
                         <field name="stage_id"
                                widget="statusbar"
-                               options="{'fold_field': 'fold'}"/>
+                               options="{'fold_field': 'fold', 'clickable': False}"/>
                         <field name="stage_sequence" invisible="1"/>
                         <field name="stage_is_done" invisible="1"/>
                         <field name="stage_is_cancelled" invisible="1"/>
@@ -233,7 +237,8 @@
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id"
                         group_create="false"
-                        group_edit="false">
+                        group_edit="false"
+                        records_draggable="false">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="date_start"/>

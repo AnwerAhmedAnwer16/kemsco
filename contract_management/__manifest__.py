@@ -1,11 +1,12 @@
 {
     "name": "Contract Management",
-    "version": "17.0.1.0.0",
+    "version": "17.0.1.1.0",
     "category": "Services",
     "description": "Contract Management",
     "author": "Anwer",
     "depends": ["project", "sale", "account", "mail"],
     "data": [
+        "security/contract_security.xml",
         "security/ir.model.access.csv",
         "data/contract_stages.xml",
         "data/cron_jobs.xml",

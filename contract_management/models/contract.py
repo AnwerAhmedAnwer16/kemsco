@@ -1,5 +1,11 @@
+import logging
+
+from markupsafe import Markup
+
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class ContractManagement(models.Model):
@@ -84,27 +90,135 @@ class ContractManagement(models.Model):
     def _read_group_stage_ids(self, stages, domain, order):
         return stages.search([], order=order)
 
+    # ── Stage Permissions / Notifications ────────────────────
+
+    def _is_contract_validator(self):
+        return self.env.su or self.env.user.has_group(
+            "contract_management.group_contract_validator"
+        )
+
+    def _check_stage_allowed(self, new_stage):
+        """Only validators may move a contract to approved / active / done."""
+        if not new_stage or new_stage.is_cancelled:
+            return
+        if new_stage.sequence >= 3 and not self._is_contract_validator():
+            raise UserError(
+                _(
+                    "لا تملك صلاحية اعتماد العقد. يجب أن تكون ضمن مجموعة "
+                    "«معتمد العقود» للقيام بهذا الإجراء."
+                )
+            )
+
+    def _stage_needs_project(self):
+        """A project is only created once the contract is validated."""
+        self.ensure_one()
+        return bool(
+            self.stage_id
+            and not self.stage_id.is_cancelled
+            and self.stage_id.sequence >= 3
+        )
+
+    def _ensure_project(self):
+        """Create and link the project when the contract reaches validation."""
+        self.ensure_one()
+        if self.project_id:
+            if self.project_id.contract_id != self:
+                self.project_id.sudo().contract_id = self.id
+            return self.project_id
+
+        project = self.env["project.project"].sudo().create(
+            {
+                "name": self.name or "New",
+                "partner_id": self.partner_id.id,
+            }
+        )
+        project.contract_id = self.id
+        self.sudo().write({"project_id": project.id})
+        return project
+
+    def _notify_contract_validators(self):
+        """Notify every member of the validator group that a contract is ready."""
+        self.ensure_one()
+        group = self.env.ref(
+            "contract_management.group_contract_validator",
+            raise_if_not_found=False,
+        )
+        if not group:
+            return
+        partners = group.sudo().users.filtered(
+            lambda user: user.active and not user.share
+        ).partner_id
+        if not partners:
+            _logger.warning(
+                "No active contract validators found to notify for contract %s",
+                self.id,
+            )
+            return
+
+        contract_url = (
+            f"{self.get_base_url().rstrip('/')}"
+            f"/web#id={self.id}&model={self._name}&view_type=form"
+        )
+        body = Markup(
+            "<p>تم رفع العقد <b>%s</b> للعميل <b>%s</b> إلى مرحلة المراجعة.</p>"
+            "<p><a href=\"%s\">فتح العقد للمراجعة والاعتماد</a></p>"
+        ) % (
+            self.name or "",
+            self.partner_id.display_name or "",
+            contract_url,
+        )
+        try:
+            # sudo(): the actor may not have an email configured, but the
+            # notification must still reach the validators.
+            self.sudo().message_notify(
+                partner_ids=partners.ids,
+                subject=_("عقد بانتظار الاعتماد: %s") % (self.name or ""),
+                body=body,
+            )
+        except Exception:
+            _logger.exception(
+                "Failed to notify contract validators for contract %s", self.id
+            )
+
     # ── CRUD ─────────────────────────────────────────────────
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if not vals.get("project_id"):
-                project_vals = {
-                    "name": vals.get("name", "New"),
-                    "partner_id": vals.get("partner_id"),
-                }
-                project = (
-                    self.env["project.project"].sudo().create(project_vals)
+            stage_id = vals.get("stage_id")
+            if stage_id:
+                self._check_stage_allowed(
+                    self.env["contract.stage"].browse(stage_id)
                 )
-                vals["project_id"] = project.id
         records = super().create(vals_list)
         for rec in records:
             if rec.project_id:
                 rec.project_id.contract_id = rec.id
+            elif rec._stage_needs_project():
+                rec._ensure_project()
+
+        review_stage = self.env.ref(
+            "contract_management.stage_review", raise_if_not_found=False
+        )
+        if review_stage:
+            for rec in records:
+                if rec.stage_id == review_stage:
+                    rec._notify_contract_validators()
         return records
 
     def write(self, vals):
+        old_stage_ids = {rec.id: rec.stage_id.id for rec in self}
+
+        if "stage_id" in vals:
+            new_stage = (
+                self.env["contract.stage"].browse(vals["stage_id"])
+                if vals.get("stage_id")
+                else self.env["contract.stage"]
+            )
+            for rec in self:
+                if rec.stage_id != new_stage:
+                    rec._check_stage_allowed(new_stage)
+
         result = super().write(vals)
         if "name" in vals:
             for rec in self:
@@ -114,6 +228,22 @@ class ContractManagement(models.Model):
             for rec in self:
                 if rec.project_id:
                     rec.project_id.contract_id = rec.id
+
+        for rec in self:
+            if not rec.project_id and rec._stage_needs_project():
+                rec._ensure_project()
+
+        if "stage_id" in vals:
+            review_stage = self.env.ref(
+                "contract_management.stage_review", raise_if_not_found=False
+            )
+            if review_stage:
+                for rec in self:
+                    if (
+                        rec.stage_id == review_stage
+                        and old_stage_ids.get(rec.id) != review_stage.id
+                    ):
+                        rec._notify_contract_validators()
         return result
 
     # ── Stage Actions ────────────────────────────────────────
